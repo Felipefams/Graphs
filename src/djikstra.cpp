@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <headers.h>
 using namespace std;
 //vrum vrum
 #define fast_io ios_base::sync_with_stdio(0); cin.tie(0);

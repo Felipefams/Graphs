@@ -44,14 +44,14 @@ int main(void){
 
     cout << "Random number generator" << endl;
     cout << "=======================" << endl;
-    cout << "Choose a number between [1...7]" << endl;  
+    cout << "Choose a number between [1...5]" << endl;  
     int x; cin >> x; 
 
-    if(x < 1 || x > 7) 
-        throw std::invalid_argument("x must be between [1...7]");
+    if(x < 1 || x > 5) 
+        throw std::invalid_argument("x must be between [1...5]");
 
     // constraints
-    //number of vertices, ill be testing with 5^x, where x in [1...7]
+    //number of vertices, ill be testing with 5^x, where x in [1...5]
     const int V = pow(5, x);
     cout << "n of vertices = " << V << endl;
 

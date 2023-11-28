@@ -1,4 +1,5 @@
 #include <chrono>
+
 #include "../headers.h"
 
 const int N = 100005;
@@ -39,9 +40,9 @@ int dijkstra(int source, int target) {
     return distance[target];
 }
 
-void benchmark(int n, int source, int target) {
-    ifstream fin("../test" + to_string(n) + ".in");
-    ofstream fout("dijkstra" + to_string(n) + ".out");
+void benchmark(int n, int m, int source, int target) {
+    ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
+    ofstream fout("dijkstra" + to_string(n) + "." + to_string(m) + ".out");
     cout << "Test " << n << ":" << endl;
 
     fast_io;
@@ -91,10 +92,9 @@ int main() {
 
     fast_io;
     int i = 0;
-    while (i != 5) {
-        benchmark(i + 1, source, target);
-        i++;
-    }
+    for (int i = 1; i <= 5; i++)
+        for (int j = 1; j <= 5; j++)
+            benchmark(i, j, source, target);
 
     return (0);
 }

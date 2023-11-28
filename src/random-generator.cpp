@@ -1,9 +1,9 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <set>
 #include <string>
 #include <unordered_set>
-#include <set>
 
 using namespace std;
 
@@ -31,7 +31,7 @@ int generateRandomInt(const int LOWER_BOUND, const int UPPER_BOUND) {
     return random(rng);
 }
 
-vector<tuple<int, int, int>> generateRandomEdges(const int edges,const int vertices, ofstream& fout) {
+vector<tuple<int, int, int>> generateRandomEdges(const int edges, const int vertices, ofstream& fout) {
     vector<tuple<int, int, int>> edgesVector;
 
     set<pair<int, int>> edgesSet;
@@ -67,6 +67,16 @@ void writeEdgesToFile(const int edges, const int vertices, ofstream& fout) {
     }
 }
 
+const vector<int> generateTestRange(const int LOWER_BOUND = 4, const int UPPER_BOUND = 10) {
+    vector<int> v;
+    for (int i = 0; i < 5; i++) {
+        v.push_back(
+            LOWER_BOUND + (i * (UPPER_BOUND - LOWER_BOUND) / 4));
+    }
+    return v;
+}
+
+//todo gurantee that the graph is connected
 int main(void) {
     cout << "Random number generator" << endl;
     cout << "=======================" << endl;
@@ -86,14 +96,20 @@ int main(void) {
     const int LOWER_BOUND = (V - 1);
     const int UPPER_BOUND = (V * (V - 1) / 2);
 
-    const int edges = generateRandomInt(LOWER_BOUND, UPPER_BOUND);
-
-    cout << "n of edges = " << edges << endl;
+    vector<int> testEdges = generateTestRange(LOWER_BOUND, UPPER_BOUND);
 
     setIO("");
-    ofstream fout("test" + to_string(x) + ".in");
 
-    writeEdgesToFile(edges, V, fout);
+    cout << "test edges = ";
+    for(auto&x : testEdges) cout << x << " ";
+    for (int i = 1; i <= testEdges.size(); i++) {
+
+        const string fileName = "test" + to_string(x) + "." + to_string(i) + ".in";
+        cout << "writing to file " << fileName << endl;
+        ofstream fout(fileName);
+
+        writeEdgesToFile(testEdges[i - 1], V, fout);
+    }
 
     return 0;
 }

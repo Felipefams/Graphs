@@ -2,6 +2,7 @@
 
 #include "../headers.h"
 
+//https://ic.unicamp.br/~afalcao/mo443/slides-aula30.pdf
 const int N = 100005;
 vector<vector<pair<int, int>>> adj(N);  // adj list with both the nodes and the weights
 
@@ -14,38 +15,40 @@ class Compare {
 };
 priority_queue<pii, vector<pii>, Compare> q;
 
-int dijkstra(int source, int target) {
+vector<int> opf(int source, int target) {
     bool visited[N + 1];
     int distance[N + 1];
-    for (auto &x : distance) x = imax;
+    for (auto &x : distance) x = 999999;
     visited[source] = true;                // mark as visited
     distance[source] = 0;                  // distance from source
     q.push(mk(source, distance[source]));  // push the first node into the queue
 
-    /*
-    for a given pair s = (a,b) the first element is the node
-        and the second is the distance from the source
-    */
     while (!q.empty()) {
         pii s = q.top();  // first node in the queue
         q.pop();          // remove the first node from the queue
+        // watch(s.fi);
+        // watch(s.sc);
         for (auto &x : adj[s.fi]) {
-            if (distance[x.fi] > distance[s.fi] + x.sc) {
-                distance[x.fi] = distance[s.fi] + x.sc;
+            int b = x.fi, w = s.sc;
+            int tmp = max(distance[s.fi], w);
+            if (tmp < distance[b]) {
+                distance[b] = tmp;
                 visited[x.fi] = true;
                 q.push(x);
             }
         }
     }
-    return distance[target];
+    vector<int> newDistance(N + 1);
+    for(int i = 0; i < N+1; ++i){
+        newDistance[i] = distance[i];
+    }
+    return newDistance;
 }
 
 void benchmark(int n, int m, int source, int target) {
     ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
-    ofstream fout("dijkstra" + to_string(n) + "." + to_string(m) + ".out");
+    ofstream fout("opf" + to_string(n) + "." + to_string(m) + ".out");
     cout << "Test " << n << ":" << endl;
-
-    // fast_io;
 
     int a, b, w;
     int t;
@@ -55,7 +58,7 @@ void benchmark(int n, int m, int source, int target) {
         adj[a].pb(mk(b, w));
     }
     auto start = chrono::high_resolution_clock::now();
-    const int ans = dijkstra(source, target);
+    auto ans = opf(source, target);
     auto end = chrono::high_resolution_clock::now();
 
     double time_taken =
@@ -64,12 +67,12 @@ void benchmark(int n, int m, int source, int target) {
     time_taken *= 1e-9;
 
     cout << "========================" << endl;
-    cout << "distance from " << source << " to " << target << " = " << ans << endl;
+    // cout << "distance from " << source << " to " << target << " = " << ans << endl;
 
     cout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 
-    fout << "distance from " << source << " to " << target << " = " << ans << endl;
+    // fout << "distance from " << source << " to " << target << " = " << ans << endl;
     fout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 
@@ -90,7 +93,6 @@ int main() {
     int target;
     cin >> target;
 
-    // fast_io;
     int i = 0;
     for (int i = 1; i <= 5; i++)
         for (int j = 1; j <= 5; j++)

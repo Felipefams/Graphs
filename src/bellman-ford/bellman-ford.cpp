@@ -17,7 +17,6 @@ int bellman_ford(int source, int target, const int vertices) {
             distance[b] = min(distance[b], distance[a] + w);
         }
     }
-    // for(auto&x : distance) cout << x << " ";
     return distance[target];
 }
 

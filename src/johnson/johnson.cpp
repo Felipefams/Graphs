@@ -2,33 +2,24 @@
 
 #include "../headers.h"
 
-int floyd_warshall(int source, int target, vector<vector<int>> &adj) {
-    int n = adj.size();
-    vector<vector<int>> distance(n + 1, vector<int>(n + 1, 0));
-    for (int i = 1; i < n; i++) {
-        for (int j = 1; j < n; j++) {
-            if (i == j)
-                distance[i][j] = 0;
-            else if (adj[i][j])
-                distance[i][j] = adj[i][j];
-            else
-                distance[i][j] = 99999;
+int johnson(int source, int target, vector<vector<int>> &adj) {
+    int vert = adj.size() - 1, edge, i, j, k;
+    for (i = 1; i <= vert; i++)
+        for (j = 1; j <= vert; j++) {
+            if (adj[i][j] == 0 && i != j)
+                adj[i][j] = 999999;  // if there is no edge, put infinity
         }
-    }
-    for (int k = 1; k < n; k++) {
-        for (int i = 1; i < n; i++) {
-            for (int j = 1; j < n; j++) {
-                distance[i][j] = min(distance[i][j],
-                                     distance[i][k] + distance[k][j]);
-            }
-        }
-    }
-    return distance[source][target];
+    for (k = 1; k <= vert; k++)
+        for (i = 1; i <= vert; i++)
+            for (j = 1; j <= vert; j++)
+                adj[i][j] = min(adj[i][j], adj[i][k] + adj[k][j]);
+
+    return adj[source][target];
 }
 
 void benchmark(int n, int m, int source, int target) {
     ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
-    ofstream fout("floyd-warshall" + to_string(n) + "." + to_string(m) + ".out");
+    ofstream fout("johnson" + to_string(n) + "." + to_string(m) + ".out");
     cout << "Test " << n << ":" << endl;
 
     // fast_io;
@@ -44,7 +35,7 @@ void benchmark(int n, int m, int source, int target) {
         adj[b][a] = w;
     }
     auto start = chrono::high_resolution_clock::now();
-    const int ans = floyd_warshall(source, target, adj);
+    const int ans = johnson(source, target, adj);
     auto end = chrono::high_resolution_clock::now();
 
     double time_taken =

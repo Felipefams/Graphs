@@ -33,9 +33,13 @@ int generateRandomInt(const int LOWER_BOUND, const int UPPER_BOUND) {
 
 vector<tuple<int, int, int>> generateRandomEdges(const int edges, const int vertices, ofstream& fout) {
     vector<tuple<int, int, int>> edgesVector;
+    for(int i = 0; i < vertices - 1; i++) {
+        const int weight = generateRandomInt(1, 100);
+        edgesVector.push_back(make_tuple(i + 1, i + 2, weight));
+    }
 
     set<pair<int, int>> edgesSet;
-    int loopBound = edges;
+    int loopBound = edges - (vertices - 1);
     for (int i = 0; i < loopBound; i++) {
         int firstEdge = generateRandomInt(1, vertices);
         int secondEdge = generateRandomInt(1, vertices);
@@ -51,6 +55,7 @@ vector<tuple<int, int, int>> generateRandomEdges(const int edges, const int vert
 
         // fout << firstEdge << " " << secondEdge << " " << weight << endl;
         edgesSet.insert(make_pair(firstEdge, secondEdge));
+        edgesSet.insert(make_pair(secondEdge, firstEdge));
         edgesVector.push_back(make_tuple(firstEdge, secondEdge, weight));
     }
 

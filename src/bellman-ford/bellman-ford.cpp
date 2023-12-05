@@ -1,11 +1,12 @@
 #include <chrono>
+
 #include "../headers.h"
 
 vector<tuple<int, int, int>> edges;
 int bellman_ford(int source, int target, const int vertices) {
     vector<int> distance(vertices + 1);
     for (int i = 1; i <= vertices; i++) {
-        distance[i] = 1000000;
+        distance[i] = 100000;
     }
     distance[source] = 0;  // distance from source
 
@@ -20,11 +21,10 @@ int bellman_ford(int source, int target, const int vertices) {
     return distance[target];
 }
 
-void benchmark(int n, int source, int target) {
-    ifstream fin("../test" + to_string(n) + ".in");
-    ofstream fout("bellman_ford" + to_string(n) + ".out");
+void benchmark(int n, int m, int source, int target) {
+    ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
+    ofstream fout("bellman_ford" + to_string(n) + "." + to_string(m) + ".out");
     cout << "Test " << n << ":" << endl;
-    fast_io;
 
     int a, b, w;
     int t;
@@ -56,7 +56,7 @@ void benchmark(int n, int source, int target) {
     fin.close();
     fout.close();
 
-    edges.clear(); 
+    edges.clear();
 }
 
 // cout << "Case #" << t << ": ";
@@ -71,12 +71,11 @@ int main() {
     int target;
     cin >> target;
 
-    fast_io;
+    // fast_io;
     int i = 0;
-    while(i != 5){
-        benchmark(i + 1, source, target);
-        i++;
-    }
+    for (int i = 1; i <= 5; i++)
+        for (int j = 1; j <= 5; j++)
+            benchmark(i, j, source, target);
 
     return (0);
 }

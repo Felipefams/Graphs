@@ -1,6 +1,5 @@
-#include <chrono>
-
 #include "../headers.h"
+#include "../timer.h"
 
 vector<tuple<int, int, int>> edges;
 int bellman_ford(int source, int target, const int vertices) {
@@ -21,10 +20,19 @@ int bellman_ford(int source, int target, const int vertices) {
     return distance[target];
 }
 
+ifstream fin2("bellman-ford.out");
+ofstream fout("bellman-ford.out");
 void benchmark(int n, int m, int source, int target) {
     ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
-    ofstream fout("bellman_ford" + to_string(n) + "." + to_string(m) + ".out");
-    cout << "Test " << n << ":" << endl;
+    cout << "Test " << n << "." << m << ":" << endl;
+    string content;
+    if(fin2.is_open()){
+        string line;
+        while(fin2 >> line){
+            content.append(line);
+            fout << line << endl;
+        }
+    }
 
     int a, b, w;
     int t;
@@ -34,22 +42,16 @@ void benchmark(int n, int m, int source, int target) {
         edges.pb(make_tuple(a, b, w));
     }
     const int vertices = pow(5, n);
-    auto start = chrono::high_resolution_clock::now();
-    const int ans = bellman_ford(source, target, vertices);
-    auto end = chrono::high_resolution_clock::now();
 
-    double time_taken =
-        chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-
-    time_taken *= 1e-9;
+    double time_taken = calculateTime([&]() {
+        bellman_ford(source, target, vertices);
+    });
 
     cout << "========================" << endl;
-    cout << "distance from " << source << " to " << target << " = " << ans << endl;
 
     cout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 
-    fout << "distance from " << source << " to " << target << " = " << ans << endl;
     fout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 

@@ -1,6 +1,5 @@
-#include <chrono>
-
 #include "../headers.h"
+#include "../timer.h"
 
 int floyd_warshall(int source, int target, vector<vector<int>> &adj) {
     int n = adj.size();
@@ -26,12 +25,20 @@ int floyd_warshall(int source, int target, vector<vector<int>> &adj) {
     return distance[source][target];
 }
 
+ifstream fin2("floyd-warshall.out");
+ofstream fout("floyd-warshall.out");
 void benchmark(int n, int m, int source, int target) {
     ifstream fin("../test" + to_string(n) + "." + to_string(m) + ".in");
-    ofstream fout("floyd-warshall" + to_string(n) + "." + to_string(m) + ".out");
-    cout << "Test " << n << ":" << endl;
+    cout << "Test " << n << "." << m << ":" << endl;
+    string content;
+    if(fin2.is_open()){
+        string line;
+        while(fin2 >> line){
+            content.append(line);
+            fout << line << endl;
+        }
+    }
 
-    // fast_io;
     const int v = pow(5, n);
     vector<vector<int>> adj(v + 1, vector<int>(v + 1, 0));
 
@@ -43,27 +50,19 @@ void benchmark(int n, int m, int source, int target) {
         adj[a][b] = w;
         adj[b][a] = w;
     }
-    auto start = chrono::high_resolution_clock::now();
-    const int ans = floyd_warshall(source, target, adj);
-    auto end = chrono::high_resolution_clock::now();
-
-    double time_taken =
-        chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-
-    time_taken *= 1e-9;
+    double time_taken = calculateTime([&](){
+        floyd_warshall(source, target, adj);
+    }); 
 
     cout << "========================" << endl;
-    cout << "distance from " << source << " to " << target << " = " << ans << endl;
 
     cout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 
-    fout << "distance from " << source << " to " << target << " = " << ans << endl;
     fout << "Time taken by program is : " << fixed
          << time_taken << setprecision(9) << " sec" << endl;
 
     fin.close();
-    fout.close();
 }
 
 int main() {
@@ -82,5 +81,7 @@ int main() {
             benchmark(i, j, source, target);
         }
     }
+
+    fout.close();
     return (0);
 }

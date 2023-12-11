@@ -56,7 +56,6 @@ void benchmark(int n, int m, int source, int target) {
          << time_taken << setprecision(9) << " sec" << endl;
 
     fin.close();
-    fout.close();
 
     edges.clear();
 }
@@ -79,5 +78,6 @@ int main() {
         for (int j = 1; j <= 5; j++)
             benchmark(i, j, source, target);
 
+    fout.close();
     return (0);
 }
